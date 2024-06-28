@@ -38,7 +38,32 @@ function processRows(rows) {
       });
       return rowData;
    });
-   return data;
+
+   // Group by event_name
+   const groupedData = data.reduce((acc, curr) => {
+      const eventName = curr['Event Name'] || 'Unknown Event';
+      if (!acc[eventName]) {
+         acc[eventName] = { event_name: eventName, activities: [] };
+      }
+      acc[eventName].activities.push({
+         activity_type: curr['Activity Type'] || '',
+         day: curr['Day'] || '',
+         duration: curr['Duration'] || '',
+         start: curr['Start'] || '',
+         end: curr['End'] || '',
+         description: curr['Description'] || '',
+         leader: curr['Leader'] || '',
+         support: curr['Support'] || '',
+         scout_mode: curr['Scout Mode'] || '',
+         chief: curr['Chief'] || '',
+         location: curr['Location'] || '',
+         rain_alternative: curr['Rain Alternative'] || '',
+         break_time: curr['Break Time'] || ''
+      });
+      return acc;
+   }, {});
+
+   return Object.values(groupedData);
 }
 
 module.exports = getSheetData;
