@@ -15,14 +15,14 @@ Install dependencies:
 
    npm install
 
-BACK-END: (this launches the data server, which needs to be running first, you can do this in the same project folder, but a separate terminal window)
+BACK-END: this launches the data server, which needs to be running first, you can do this in the same project folder, but a separate terminal window
 
    set NODE_ENV=development
    node server/server.js
 
-FRONT-END: Launch dev server:
+FRONT-END: Launch client side app
 
-   npm start
+   npm run client
 
 
 -----------------------------------------------

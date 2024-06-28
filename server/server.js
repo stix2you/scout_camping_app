@@ -13,7 +13,8 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../public')));
+// app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../build')));
 
 // OAuth routes
 app.get('/login', (req, res) => {
