@@ -6,7 +6,7 @@ const testFetch = async () => {
 
    try {
       const data = await getSheetData(spreadsheetId, range);
-      console.log('Raw data:', JSON.stringify(data, null, 2)); // Logging raw data
+      console.log('Processed data:', JSON.stringify(data, null, 2));
    } catch (error) {
       console.error('Error fetching data:', error);
    }
