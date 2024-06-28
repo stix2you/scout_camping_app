@@ -1,7 +1,15 @@
 const { google } = require('googleapis');
-const { authenticate } = require('@google-cloud/local-auth');
 const path = require('path');
-const fs = require('fs');
+
+// Load the service account key from the environment variable
+const key = JSON.parse(Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64, 'base64').toString('utf8'));
+
+const auth = new google.auth.GoogleAuth({
+   credentials: key,
+   scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+});
+
+const sheets = google.sheets({ version: 'v4', auth });
 
 const ensureKeys = (activity) => {
    return {
@@ -20,12 +28,6 @@ const ensureKeys = (activity) => {
 };
 
 const getSheetData = async (spreadsheetId, range) => {
-   const auth = await authenticate({
-      keyfilePath: path.join(__dirname, '../config/service-account-key.json'),
-      scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-   });
-   const sheets = google.sheets({ version: 'v4', auth });
-
    const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range,
