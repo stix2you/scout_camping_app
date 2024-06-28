@@ -27,7 +27,13 @@ router.get('/', async (req, res) => {
    const range = 'My Programme!A5:K';
    try {
       const data = await getSheetData(spreadsheetId, range);
-      console.log('Raw data:', data); // Logging raw data
+      console.log('Raw data:', JSON.stringify(data, null, 2)); // Logging raw data
+
+      if (!data || data.length === 0) {
+         console.error('No data found in the specified range');
+         res.json({ "2024_weekend_events": [{ event_name: "Fall Camping Weekend", activities: [] }] });
+         return;
+      }
 
       let currentDay = '';
       const events = data.reduce((acc, row) => {
@@ -35,13 +41,13 @@ router.get('/', async (req, res) => {
             currentDay = row.Description; // Assuming description contains the day
          } else if (row['Activity Type'] && row['Activity Type'] !== 'Activity Type') {
             const activity = ensureKeys({ ...row, day: currentDay });
-            console.log('Activity being added:', activity); // Log each activity being added
+            console.log('Activity being added:', JSON.stringify(activity, null, 2)); // Log each activity being added
             acc.push(activity);
          }
          return acc;
       }, []);
 
-      console.log('Processed events:', events); // Logging processed events
+      console.log('Processed events:', JSON.stringify(events, null, 2)); // Logging processed events
 
       res.json({ "2024_weekend_events": [{ event_name: "Fall Camping Weekend", activities: events }] });
    } catch (error) {
