@@ -41,6 +41,15 @@ FRONT-END: Launch client side app
 
    npm run client
 
+----------------------------------------------
+
+Convert service-account-key.json to base64 and send to Heroku:
+
+   node encode-service-account-key.js
+
+   copy the string from service-account-key.json.base64 in the root directory
+
+   heroku config:set GOOGLE_SERVICE_ACCOUNT_KEY_BASE64=<base64-encoded-string>
 
 -----------------------------------------------
 

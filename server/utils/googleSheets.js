@@ -1,11 +1,19 @@
 const { google } = require('googleapis');
 const path = require('path');
-const keyFilePath = path.join(__dirname, '../config/service-account-key.json');
+const fs = require('fs');
 
-const auth = new google.auth.GoogleAuth({
-   keyFile: keyFilePath,
-   scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-});
+// Decode the base64 encoded service account key
+const serviceAccountKeyBase64 = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64;
+const serviceAccountKeyJson = Buffer.from(serviceAccountKeyBase64, 'base64').toString('utf-8');
+const serviceAccountKey = JSON.parse(serviceAccountKeyJson);
+
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
+const auth = new google.auth.JWT(
+   serviceAccountKey.client_email,
+   null,
+   serviceAccountKey.private_key,
+   SCOPES
+);
 
 const sheets = google.sheets({ version: 'v4', auth });
 
@@ -15,32 +23,11 @@ const getSheetData = async (spreadsheetId, range) => {
          spreadsheetId,
          range,
       });
-
-      const rows = response.data.values;
-
-      if (rows.length === 0) {
-         console.error('No data found.');
-         return [];
-      }
-
-      // Extract headers
-      const headers = rows[0];
-      const data = rows.slice(1);
-
-      // Convert array of arrays into array of objects
-      const formattedData = data.map(row => {
-         let rowData = {};
-         headers.forEach((header, index) => {
-            rowData[header] = row[index] || '';
-         });
-         return rowData;
-      });
-
-      return formattedData;
+      return response.data.values;
    } catch (error) {
       console.error('Error fetching data from Google Sheets:', error);
       throw error;
    }
 };
 
-module.exports = { getSheetData };
+module.exports = getSheetData;
