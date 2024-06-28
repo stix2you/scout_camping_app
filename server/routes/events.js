@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getSheetData } = require('../utils/googleSheets');
+const getSheetData = require('../utils/googleSheets');
 
-// console.log('we are in events.js');  
+console.log('getSheetData in events.js:', getSheetData); // check if the function is correctly imported from googleSheets.js
 
 // Helper function to ensure all keys are present
 const ensureKeys = (activity) => {

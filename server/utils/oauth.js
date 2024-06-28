@@ -1,5 +1,4 @@
 const { google } = require('googleapis');
-const path = require('path');
 
 // Load environment variables from .env file
 require('dotenv').config();

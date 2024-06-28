@@ -1,6 +1,4 @@
 const { google } = require('googleapis');
-const path = require('path');
-const fs = require('fs');
 
 // Decode the base64 encoded service account key
 const serviceAccountKeyBase64 = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64;

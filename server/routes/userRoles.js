@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getSheetData } = require('../utils/googleSheets');
+const getSheetData = require('../utils/googleSheets');
+
+console.log('getSheetData in userRoles.js:', getSheetData); // check if the function is correctly imported from googleSheets.js
 
 // Route to fetch user roles
 router.get('/', async (req, res) => {
