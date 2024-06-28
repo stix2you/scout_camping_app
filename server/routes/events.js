@@ -9,8 +9,15 @@ router.get('/', async (req, res) => {
    const spreadsheetId = '1r9Hk2an4h8FggwPcYjHNgY5QWYes-FVzeCWtAXveOB8';
    const range = 'My Programme!A5:K';
    try {
+      console.log('Fetching data from Google Sheets...');
       const events = await getSheetData(spreadsheetId, range);
-      console.log('Events data:', JSON.stringify(events, null, 2)); // Logging events data
+      console.log('Fetched events data:', JSON.stringify(events, null, 2)); // Logging fetched events data
+
+      if (!events || events.length === 0) {
+         console.error('No events data found');
+         res.json({ "2024_weekend_events": [{ event_name: "Fall Camping Weekend", activities: [] }] });
+         return;
+      }
 
       res.json({ "2024_weekend_events": [{ event_name: "Fall Camping Weekend", activities: events }] });
    } catch (error) {
