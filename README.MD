@@ -1,8 +1,25 @@
 DEPLOYMENT:
 
-Stay tuned...
+App is deployed to Heroku here:
+
+https://scema-fb71842d08e5.herokuapp.com/
+
+
+can deploy with Doug's account via:
+
+   git .
+   git commit -m "message"
+   git push heroku master
+   heroku open
+
+if problems during deploy, see log at:
+
+   heroku logs --tail
+
+
 
 DEV ENVIRONMENT:
+
 To get up and running in dev server, go to your projects folder, clone repo:
 
    git clone https://github.com/stix2you/scema

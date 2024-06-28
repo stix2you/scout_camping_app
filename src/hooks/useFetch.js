@@ -1,24 +1,20 @@
 import { useState, useEffect } from 'react';
 
-const useFetch = (url) => {
+const useFetch = (endpoint) => {
    const [data, setData] = useState(null);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState(null);
 
    useEffect(() => {
       const fetchData = async () => {
+         console.log(`Fetching data from ${endpoint}`);
          try {
-            console.log(`Fetching data from ${url}`);
-            const response = await fetch(url);
-            const contentType = response.headers.get('content-type');
-            console.log(`Content-Type: ${contentType}`);
-            if (contentType && contentType.includes('application/json')) {
-               const data = await response.json();
-               setData(data);
-            } else {
-               const text = await response.text();
-               throw new Error(`Unexpected response: ${text}`);
+            const response = await fetch(endpoint);
+            if (!response.ok) {
+               throw new Error('Network response was not ok');
             }
+            const result = await response.json();
+            setData(result);
          } catch (error) {
             console.error('Fetch error:', error);
             setError(error);
@@ -26,8 +22,9 @@ const useFetch = (url) => {
             setLoading(false);
          }
       };
+
       fetchData();
-   }, [url]);
+   }, [endpoint]);
 
    return { data, loading, error };
 };

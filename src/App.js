@@ -20,8 +20,8 @@ const App = () => {
       'Special 2': false,
    });
 
-   const { data: eventsData, loading: eventsLoading, error: eventsError } = useFetch('http://localhost:3001/api/events');
-   const { data: userRolesData, loading: userRolesLoading, error: userRolesError } = useFetch('http://localhost:3001/api/user-roles');
+   const { data: eventsData, loading: eventsLoading, error: eventsError } = useFetch('/api/events');
+   const { data: userRolesData, loading: userRolesLoading, error: userRolesError } = useFetch('/api/user-roles');
 
    const [userName, setUserName] = useState('');
 
@@ -123,7 +123,7 @@ const App = () => {
    };
 
    const handleLogin = () => {
-      window.location.href = 'http://localhost:3001/auth/google'; // Adjust the URL based on your server setup
+      window.location.href = '/auth/google'; // Adjust the URL based on your server setup
    };
 
    if (eventsLoading || userRolesLoading) return <p>Loading...</p>;
