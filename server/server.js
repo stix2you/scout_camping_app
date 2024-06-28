@@ -51,8 +51,6 @@ app.get('/oauth2callback', async (req, res) => {
          const userInfo = response.data;
          console.log('User info:', userInfo);
 
-         // Store user info in session or token here if needed
-
          // Redirect to the homepage or dashboard
          res.redirect(`http://localhost:3000/now?name=${encodeURIComponent(userInfo.name)}`);
       });
