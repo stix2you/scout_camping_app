@@ -7,7 +7,7 @@ const Now = ({ events, simulatedTime }) => {
    const [nextEvent, setNextEvent] = useState(null);
    const [upcomingEvents, setUpcomingEvents] = useState([]);
    const [currentTime, setCurrentTime] = useState(simulatedTime);
-   const [userName, setUserName] = useState('');
+   // const [userName, setUserName] = useState('');
 
    // Get the user name from the query parameter if available
    useEffect(() => {
@@ -17,7 +17,7 @@ const Now = ({ events, simulatedTime }) => {
       const email = params.get('email');
       
       if (name) {
-         setUserName(name);
+         // setUserName(name);
          localStorage.setItem('userName', name);
        }
    
