@@ -8,6 +8,7 @@ console.log('getSheetData in events.js:', getSheetData); // Check if the functio
 router.get('/', async (req, res) => {
    const spreadsheetId = '1r9Hk2an4h8FggwPcYjHNgY5QWYes-FVzeCWtAXveOB8';
    const range = 'My Programme!A5:K';
+   console.log('Fetching data from Google Sheets outside of try...');
    try {
       console.log('Fetching data from Google Sheets...');
       const events = await getSheetData(spreadsheetId, range);
