@@ -1,0 +1,135 @@
+/* src/App.css */
+.App {
+   text-align: center;
+   display: flex;
+   flex-direction: column;
+   height: 100vh;
+}
+
+main {
+   flex-grow: 1;
+   padding: 0;
+   overflow-y: auto;
+   box-sizing: border-box;
+}
+
+.schedule {
+   padding: 20px;
+}
+
+.event-list {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+}
+
+.event-card {
+   background-color: #f9f9f9;
+   border: 1px solid #ddd;
+   padding: 15px;
+   border-radius: 8px;
+}
+
+/* Bottom navigation bar */
+.bottom-nav {
+   display: flex;
+   justify-content: space-around;
+   align-items: center;
+   background-color: white;
+   border-top: 1px solid #ddd;
+   padding: 10px 0;
+   position: fixed;
+   width: 100%;
+   bottom: 0;
+}
+
+.nav-link {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   color: gray;
+   text-decoration: none;
+   font-size: 14px;
+}
+
+.nav-link svg {
+   font-size: 24px;
+}
+
+.nav-link.active {
+   color: #282c34;
+   font-weight: bold;
+}
+
+.nav-link.active svg {
+   color: #282c34;
+}
+
+/* Responsive styling for mobile screens */
+@media (max-width: 600px) {
+   .App-header h1 {
+      font-size: 1.2rem;
+   }
+}
+
+/* Popup styling */
+.popup {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: rgba(0, 0, 0, 0.5);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.popup-content {
+   background: white;
+   padding: 20px;
+   border-radius: 8px;
+   text-align: center;
+}
+
+.popup-content h2 {
+   margin-top: 0;
+}
+
+.popup-content input {
+   margin-bottom: 10px;
+   padding: 5px;
+   font-size: 16px;
+}
+
+.popup-content button {
+   padding: 10px 20px;
+   font-size: 16px;
+   cursor: pointer;
+}
+
+/* New styles for header */
+.App-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 10px;
+   background-color: #282c34;
+   color: white;
+}
+
+.App-header h1 {
+   cursor: pointer;
+}
+
+.simulated-time {
+   font-size: 14px;
+}
+
+.test-notification-button {
+   background: none;
+   border: none;
+   color: white;
+   font-size: 20px;
+   cursor: pointer;
+}
