@@ -46,7 +46,7 @@ function processRows(rows) {
          acc[eventName] = { event_name: eventName, activities: [] };
       }
       acc[eventName].activities.push({
-         activity_type: curr['Activity Type'] || '',
+         activitytype: curr['Activity Type'] || '',
          day: curr['Day'] || '',
          duration: curr['Duration'] || '',
          start: curr['Start'] || '',
