@@ -23,16 +23,27 @@ const App = () => {
    const { data: eventsData, loading: eventsLoading, error: eventsError } = useFetch('http://localhost:3001/api/events');
    const { data: userRolesData, loading: userRolesLoading, error: userRolesError } = useFetch('http://localhost:3001/api/user-roles');
 
-   // Log the structure of eventsData to understand it better
+   const [userName, setUserName] = useState('');
+
    useEffect(() => {
-      console.log('Fetched Events Data:', eventsData);
-   }, [eventsData]);
+      // Get the user name from the query parameter if available
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get('name');
+      if (name) {
+         setUserName(name);
+      }
+   }, []);
+
+   // Log the structure of eventsData to understand it better
+   // useEffect(() => {
+   //    console.log('Fetched Events Data:', eventsData);
+   // }, [eventsData]);
 
    const events = eventsData ? eventsData["2024_weekend_events"] : [];
    const userRoles = userRolesData || [];
 
-   console.log('Events Data:', events);
-   console.log('User Roles Data:', userRoles);
+   // console.log('Events Data:', events);
+   // console.log('User Roles Data:', userRoles);
 
    const [simulatedTime, setSimulatedTime] = useState(new Date('2024-06-22T14:30:00')); // Default simulated time
    const [showPopup, setShowPopup] = useState(false);
@@ -45,7 +56,7 @@ const App = () => {
       return () => clearInterval(interval);
    }, []);
 
-   const handleTitleClick = () => {
+   const handleTimeClick = () => {
       setShowPopup(true);
    };
 
@@ -111,6 +122,10 @@ const App = () => {
       }
    };
 
+   const handleLogin = () => {
+      window.location.href = 'http://localhost:3001/auth/google'; // Adjust the URL based on your server setup
+   };
+
    if (eventsLoading || userRolesLoading) return <p>Loading...</p>;
    if (eventsError) return <p>Error loading events: {eventsError.message}</p>;
    if (userRolesError) return <p>Error loading user roles: {userRolesError.message}</p>;
@@ -119,11 +134,14 @@ const App = () => {
       <Router>
          <div className="App">
             <header className="App-header">
-               <h1 onClick={handleTitleClick}>scema</h1>
-               <div className="simulated-time">
-                  <span>Time: </span>
-                  {formatSimulatedTimeForDisplay(simulatedTime)}
+               <div className="header-top">
+                  <h1 onClick={handleLogin}>scema</h1>
+                  <div onClick={handleTimeClick} className="simulated-time">
+                     <span>Time: </span>
+                     {formatSimulatedTimeForDisplay(simulatedTime)}
+                  </div>
                </div>
+               {userName && <div className="header-bottom"><p>Welcome, {userName}!</p></div>}
                <button className="test-notification-button" onClick={sendTestNotification}>
                   <FaBell />
                </button>
@@ -136,7 +154,7 @@ const App = () => {
                   <Route path="/my-schedule" element={<MySchedule events={events} userRoles={userRoles} userName="Fraser Hewson" groupSelections={groupSelections} simulatedTime={simulatedTime} />} />
                   <Route path="/event/:id" element={<EventDetails simulatedTime={simulatedTime} />} />
                   <Route path="/settings" element={<Settings groupSelections={groupSelections} setGroupSelections={setGroupSelections} />} />
-                  <Route path="*" element={<Navigate to="/scema" />} />
+                  <Route path="*" element={<Navigate to="/now" />} />
                </Routes>
             </main>
             <nav className="bottom-nav">

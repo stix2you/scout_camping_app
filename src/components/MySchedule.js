@@ -4,12 +4,9 @@ import './Schedule.css';
 const MySchedule = ({ events = [], userRoles = [], userName = '', groupSelections = {}, simulatedTime }) => {
    const [filteredEvents, setFilteredEvents] = useState([]);
 
-   // Flatten the activities array from events
-   const flattenedEvents = events.flatMap(event => event.activities);
-
    useEffect(() => {
-      console.log('Events in MySchedule component:', events);
-      console.log('Flattened Events:', flattenedEvents);
+      const flattenedEvents = events.flatMap(event => event.activities);
+
       if (flattenedEvents.length > 0) {
          const selectedGroups = Object.keys(groupSelections).filter(group => groupSelections[group]);
          const filtered = flattenedEvents.filter(event => {
@@ -26,7 +23,7 @@ const MySchedule = ({ events = [], userRoles = [], userName = '', groupSelection
       } else {
          console.error('No events data provided to MySchedule component.');
       }
-   }, [flattenedEvents, userRoles, userName, groupSelections]);
+   }, [events, userRoles, userName, groupSelections]);
 
    const highlightName = (text) => {
       return text.split(userName).map((part, index) =>
@@ -48,8 +45,6 @@ const MySchedule = ({ events = [], userRoles = [], userName = '', groupSelection
          console.warn('Event with undefined or invalid day:', event.activity_type, event.start, event.end);
       }
    });
-
-   console.log('Grouped Events:', groupedEvents);
 
    return (
       <div className="schedule">

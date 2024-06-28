@@ -1,12 +1,6 @@
 DEPLOYMENT:
 
-
-FRONT-END:
-
-Deploy to gh-pages from master branch:
-npm run deploy
-(script in package.json to do a build, then update gh-pages -- remain on master branch for editing/work)
-
+Stay tuned...
 
 DEV ENVIRONMENT:
 To get up and running in dev server, go to your projects folder, clone repo:
@@ -21,14 +15,15 @@ Install dependencies:
 
    npm install
 
-Launch dev server:
+BACK-END: (this launches the data server, which needs to be running first, you can do this in the same project folder, but a separate terminal window)
+
+   set NODE_ENV=development
+   node server/server.js
+
+FRONT-END: Launch dev server:
 
    npm start
 
-
-BACK-END: (this launches the data server, which needs to be running first, you can do this in the same project folder, but a separate terminal window)
-
-   node server/server.js
 
 -----------------------------------------------
 

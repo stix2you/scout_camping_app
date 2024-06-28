@@ -11,7 +11,7 @@ const Schedule = ({ events = [] }) => {
    const flattenedEvents = events.flatMap(event => event.activities);
 
    useEffect(() => {
-      console.log('Flattened Events in Schedule component:', flattenedEvents);
+      // console.log('Flattened Events in Schedule component:', flattenedEvents);
    }, [flattenedEvents]);
 
    const sortEvents = (events) => {
@@ -55,7 +55,7 @@ const Schedule = ({ events = [] }) => {
       console.error('No events data provided to Schedule component.');
    }
 
-   console.log('Grouped Events:', groupedEvents);
+   // console.log('Grouped Events:', groupedEvents);
 
    return (
       <div className="schedule">

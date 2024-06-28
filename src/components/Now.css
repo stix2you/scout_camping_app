@@ -1,7 +1,7 @@
 .now-container {
    display: flex;
    flex-direction: column;
-   gap: 10px;
+   gap: 0px;
 }
 
 .now-section,

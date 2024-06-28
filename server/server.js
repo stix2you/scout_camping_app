@@ -1,8 +1,10 @@
 const express = require('express');
-const cors = require('cors');  // Import the CORS package
+const cors = require('cors');
 const path = require('path');
+const { google } = require('googleapis');
 const eventsRouter = require('./routes/events');
 const userRolesRouter = require('./routes/userRoles');
+const { oauth2Client, getAuthUrl } = require('./utils/oauth');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -12,6 +14,52 @@ app.use(cors());
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../public')));
+
+// OAuth routes
+app.get('/login', (req, res) => {
+   const authUrl = getAuthUrl();
+   res.redirect(authUrl);
+});
+
+app.get('/auth/google', (req, res) => {
+   const authUrl = getAuthUrl();
+   res.redirect(authUrl);
+});
+
+// OAuth callback route
+app.get('/oauth2callback', async (req, res) => {
+   const { code } = req.query;
+   try {
+      const { tokens } = await oauth2Client.getToken(code);
+      oauth2Client.setCredentials(tokens);
+
+      // Get user information
+      const oauth2 = google.oauth2({
+         auth: oauth2Client,
+         version: 'v2',
+      });
+
+      oauth2.userinfo.get((err, response) => {
+         if (err) {
+            console.error('Error fetching user info:', err);
+            res.status(500).send('Authentication error');
+            return;
+         }
+
+         // User info
+         const userInfo = response.data;
+         console.log('User info:', userInfo);
+
+         // Store user info in session or token here if needed
+
+         // Redirect to the homepage or dashboard
+         res.redirect(`http://localhost:3000/now?name=${encodeURIComponent(userInfo.name)}`);
+      });
+   } catch (error) {
+      console.error('Error during OAuth callback:', error);
+      res.status(500).send('Authentication failed');
+   }
+});
 
 // API routes
 app.use('/api/events', eventsRouter);

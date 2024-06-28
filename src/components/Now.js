@@ -7,8 +7,27 @@ const Now = ({ events, simulatedTime }) => {
    const [nextEvent, setNextEvent] = useState(null);
    const [upcomingEvents, setUpcomingEvents] = useState([]);
    const [currentTime, setCurrentTime] = useState(simulatedTime);
+   const [userName, setUserName] = useState('');
 
-   console.log('Events in Now component:', events);
+   // Get the user name from the query parameter if available
+   useEffect(() => {
+      // Get the user name from the query parameter if available
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get('name');
+      const email = params.get('email');
+      
+      if (name) {
+         setUserName(name);
+         localStorage.setItem('userName', name);
+       }
+   
+       if (email) {
+         localStorage.setItem('userEmail', email);
+       }
+       
+   }, []);
+
+   // console.log('Events in Now component:', events);
    useEffect(() => {
       setCurrentTime(simulatedTime);
    }, [simulatedTime]);
@@ -22,12 +41,12 @@ const Now = ({ events, simulatedTime }) => {
 
    useEffect(() => {
       if (events.length > 0) {
-         console.log('Events in Now component:', events);
+         // console.log('Events in Now component:', events);
 
          // Assuming events is an array of objects with the structure:
          // { event_name: string, activities: array of activity objects }
          const allActivities = events.flatMap(event => event.activities);
-         console.log('All Activities:', allActivities);
+         // console.log('All Activities:', allActivities);
 
          const current = allActivities.find(
             (activity) => new Date(`2024-06-22T${activity.start}:00`) <= currentTime && new Date(`2024-06-22T${activity.end}:00`) >= currentTime
@@ -39,9 +58,9 @@ const Now = ({ events, simulatedTime }) => {
             .filter((activity) => new Date(`2024-06-22T${activity.start}:00`) > currentTime)
             .slice(0, 5); // Select the next five upcoming activities
 
-         console.log('Current Activity:', current);
-         console.log('Next Activity:', next);
-         console.log('Upcoming Activities:', upcoming);
+         // console.log('Current Activity:', current);
+         // console.log('Next Activity:', next);
+         // console.log('Upcoming Activities:', upcoming);
 
          setCurrentEvent(current);
          setNextEvent(next);
