@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const getSheetData = require('../utils/googleSheets');
 
-console.log('getSheetData in events.js:', getSheetData); // check if the function is correctly imported from googleSheets.js
+console.log('getSheetData in events.js:', getSheetData); // Check if the function is correctly imported from googleSheets.js
 
 // Helper function to ensure all keys are present
 const ensureKeys = (activity) => {
@@ -27,21 +27,21 @@ router.get('/', async (req, res) => {
    const range = 'My Programme!A5:K';
    try {
       const data = await getSheetData(spreadsheetId, range);
-      console.log('Raw data:', data);  // Logging raw data
+      console.log('Raw data:', data); // Logging raw data
 
       let currentDay = '';
       const events = data.reduce((acc, row) => {
          if (row['Activity Type'] === 'Day') {
-            currentDay = row.Description;  // Assuming description contains the day
+            currentDay = row.Description; // Assuming description contains the day
          } else if (row['Activity Type'] && row['Activity Type'] !== 'Activity Type') {
             const activity = ensureKeys({ ...row, day: currentDay });
-            console.log('Activity being added:', activity);  // Log each activity being added
+            console.log('Activity being added:', activity); // Log each activity being added
             acc.push(activity);
          }
          return acc;
       }, []);
 
-      console.log('Processed events:', events);  // Logging processed events
+      console.log('Processed events:', events); // Logging processed events
 
       res.json({ "2024_weekend_events": [{ event_name: "Fall Camping Weekend", activities: events }] });
    } catch (error) {
