@@ -1,69 +1,66 @@
 const { google } = require('googleapis');
-const { promisify } = require('util');
-const fs = require('fs');
+const { authenticate } = require('@google-cloud/local-auth');
 const path = require('path');
+const fs = require('fs');
 
-// Load the service account key from the environment variable
-const key = JSON.parse(Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64, 'base64').toString('utf8'));
+const ensureKeys = (activity) => {
+   return {
+      activity_type: activity['Activity Type'] || '',
+      duration: activity.Duration || '',
+      start: activity.Start || '',
+      end: activity.End || '',
+      description: activity.Description || '',
+      leader: activity.Leader || '',
+      support: activity.Support || '',
+      scout_mode: activity['Scout Mode'] || '',
+      chief: activity.Chief || '',
+      location: activity.Location || '',
+      day: activity.day || ''
+   };
+};
 
-const auth = new google.auth.GoogleAuth({
-   credentials: key,
-   scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-});
+const getSheetData = async (spreadsheetId, range) => {
+   const auth = await authenticate({
+      keyfilePath: path.join(__dirname, '../config/service-account-key.json'),
+      scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+   });
+   const sheets = google.sheets({ version: 'v4', auth });
 
-const sheets = google.sheets({ version: 'v4', auth });
-
-async function getSheetData(spreadsheetId, range) {
    const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range,
    });
+
    const rows = response.data.values;
-   if (rows.length) {
-      return processRows(rows);
-   } else {
-      console.log('No data found.');
+
+   if (!rows || rows.length === 0) {
+      console.error('No data found.');
       return [];
    }
-}
 
-function processRows(rows) {
    const headers = rows[0];
    const data = rows.slice(1).map(row => {
-      let rowData = {};
-      headers.forEach((header, index) => {
-         if (header) {
-            rowData[header] = row[index];
-         }
-      });
-      return rowData;
+      return headers.reduce((acc, header, index) => {
+         acc[header] = row[index];
+         return acc;
+      }, {});
    });
 
-   // Group by event_name
-   const groupedData = data.reduce((acc, curr) => {
-      const eventName = curr['Event Name'] || 'Unknown Event';
-      if (!acc[eventName]) {
-         acc[eventName] = { event_name: eventName, activities: [] };
+   let currentDay = '';
+   const events = data.reduce((acc, row) => {
+      if (row['Activity Type'] === 'Day') {
+         currentDay = row.Description; // Assuming description contains the day
+      } else if (row['Activity Type'] && row['Activity Type'] !== 'Activity Type') {
+         const activity = ensureKeys({ ...row, day: currentDay });
+         console.log('Activity being added:', JSON.stringify(activity, null, 2)); // Log each activity being added
+         acc.push(activity);
       }
-      acc[eventName].activities.push({
-         activitytype: curr['Activity Type'] || '',
-         day: curr['Day'] || '',
-         duration: curr['Duration'] || '',
-         start: curr['Start'] || '',
-         end: curr['End'] || '',
-         description: curr['Description'] || '',
-         leader: curr['Leader'] || '',
-         support: curr['Support'] || '',
-         scout_mode: curr['Scout Mode'] || '',
-         chief: curr['Chief'] || '',
-         location: curr['Location'] || '',
-         rain_alternative: curr['Rain Alternative'] || '',
-         break_time: curr['Break Time'] || ''
-      });
       return acc;
-   }, {});
+   }, []);
 
-   return Object.values(groupedData);
-}
+   console.log('Processed events:', JSON.stringify(events, null, 2)); // Logging processed events
+
+   return events;
+};
 
 module.exports = getSheetData;
