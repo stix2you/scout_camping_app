@@ -13,7 +13,6 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 
 // Serve static files from the React app
-// app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, '../build')));
 
 // OAuth routes
@@ -51,8 +50,8 @@ app.get('/oauth2callback', async (req, res) => {
          const userInfo = response.data;
          console.log('User info:', userInfo);
 
-         // Redirect to the homepage or dashboard
-         res.redirect(`http://localhost:3000/now?name=${encodeURIComponent(userInfo.name)}`);
+         // Redirect to the "Now" page with the user's information as query parameters
+         res.redirect(`/now?name=${encodeURIComponent(userInfo.name)}&email=${encodeURIComponent(userInfo.email)}`);
       });
    } catch (error) {
       console.error('Error during OAuth callback:', error);
@@ -64,9 +63,9 @@ app.get('/oauth2callback', async (req, res) => {
 app.use('/api/events', eventsRouter);
 app.use('/api/user-roles', userRolesRouter);
 
-// Catch-all to serve the React app
+// Catch-all to serve the React app's index.html for any other route
 app.get('*', (req, res) => {
-   res.sendFile(path.join(__dirname, '../public', 'index.html'));
+   res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
 
 app.listen(PORT, () => {
