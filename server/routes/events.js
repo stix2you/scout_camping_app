@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
    const range = 'My Programme!A5:K';
    try {
       const data = await getSheetData(spreadsheetId, range);
-      // console.log('Raw data:', data);  // Logging raw data
+      console.log('Raw data:', data);  // Logging raw data
 
       let currentDay = '';
       const events = data.reduce((acc, row) => {
@@ -35,13 +35,13 @@ router.get('/', async (req, res) => {
             currentDay = row.Description;  // Assuming description contains the day
          } else if (row['Activity Type'] && row['Activity Type'] !== 'Activity Type') {
             const activity = ensureKeys({ ...row, day: currentDay });
-            // console.log('Activity being added:', activity);  // Log each activity being added
+            console.log('Activity being added:', activity);  // Log each activity being added
             acc.push(activity);
          }
          return acc;
       }, []);
 
-      // console.log('Processed events:', events);  // Logging processed events
+      console.log('Processed events:', events);  // Logging processed events
 
       res.json({ "2024_weekend_events": [{ event_name: "Fall Camping Weekend", activities: events }] });
    } catch (error) {
